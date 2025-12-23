@@ -1,0 +1,19 @@
+# Ignorar arquivos do sistema operacional
+.DS_Store
+Thumbs.db
+
+# Ignorar ambiente virtual (Essencial!)
+.venv/
+env/
+
+# Ignorar segredos e configurações locais
+.env
+config.json
+
+# Ignorar arquivos compilados do Python
+__pycache__/
+*.pyc
+
+# Ignorar dados pesados (Boa prática)
+*.parquet
+*.csv
