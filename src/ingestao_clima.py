@@ -45,5 +45,5 @@ daily_data["temperature_2m_mean"] = daily_temperature_2m_mean
 daily_data["precipitation_sum"] = daily_precipitation_sum
 
 daily_dataframe = pd.DataFrame(data = daily_data)
-daily_dataframe.to_parquet("daily_data.parquet", index = False)
+daily_dataframe.to_parquet("data/bronze/clima_output.parquet", index = False)
 print(daily_dataframe.head())
