@@ -1,0 +1,54 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import os
+
+# Configuração de estilo
+plt.style.use('ggplot')
+
+print("Gerando gráfico combinado (Eixo Duplo)...")
+
+# 1. Carregar dados
+arquivo = 'data/gold/final_output.parquet'
+if not os.path.exists(arquivo):
+    print("ERRO: Arquivo não encontrado!")
+    exit()
+
+df = pd.read_parquet(arquivo)
+df = df.sort_values('data_iniSE')
+
+# 2. Criar a Figura e o Primeiro Eixo (Dengue)
+fig, ax1 = plt.subplots(figsize=(14, 7))
+
+# Plot da Dengue (Eixo da Esquerda - Linha)
+cor_dengue = 'tab:red'
+ax1.set_xlabel('Semana Epidemiológica')
+ax1.set_ylabel('Casos de Dengue', color=cor_dengue, fontsize=12, fontweight='bold')
+linha1 = ax1.plot(df['data_iniSE'], df['casos'], color=cor_dengue, linewidth=2.5, label='Casos Dengue')
+ax1.tick_params(axis='y', labelcolor=cor_dengue)
+ax1.grid(True, linestyle='--', alpha=0.5) # Grid suave
+
+# 3. Criar o Segundo Eixo (Chuva) - O Pulo do Gato! 🐈
+ax2 = ax1.twinx()  # Cria um eixo gêmeo que compartilha o X
+
+# Plot da Chuva (Eixo da Direita - Barras)
+cor_chuva = 'tab:blue'
+ax2.set_ylabel('Chuva (mm)', color=cor_chuva, fontsize=12, fontweight='bold')
+barra1 = ax2.bar(df['data_iniSE'], df['precipitation_sum'], color=cor_chuva, alpha=0.3, width=6, label='Chuva (mm)')
+ax2.tick_params(axis='y', labelcolor=cor_chuva)
+ax2.grid(False) # Desliga o grid do segundo eixo para não poluir
+
+# 4. Título e Legenda Unificada
+plt.title('Correlação: Chuva vs Dengue (Vitória/ES)', fontsize=16)
+
+# Truque para juntar legendas de eixos diferentes
+linhas = linha1 + [barra1]
+labels = [l.get_label() for l in linhas]
+ax1.legend(linhas, labels, loc='upper left', frameon=True, facecolor='white', framealpha=0.9)
+
+plt.tight_layout()
+
+# 5. Salvar
+caminho_final = 'results/03_dengue_chuva_combinado.png'
+plt.savefig(caminho_final, dpi=300) # dpi=300 deixa a imagem em alta resolução
+print(f"✅ Gráfico salvo com sucesso: {caminho_final}")
+plt.close()
