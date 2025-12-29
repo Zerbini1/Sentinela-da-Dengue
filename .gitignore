@@ -16,4 +16,4 @@ __pycache__/
 
 # Ignorar dados pesados (Boa prática)
 *.parquet
-*.csv
+*.csv.cache.sqlite
