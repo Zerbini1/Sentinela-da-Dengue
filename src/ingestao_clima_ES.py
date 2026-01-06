@@ -35,8 +35,8 @@ for ciades in df_es_coords.itertuples():
     params = {
         "latitude": ciades.latitude,
         "longitude": ciades.longitude,
-        "start_date": "2020-01-01",
-        "end_date": "2025-12-01",
+        "start_date": "2019-12-29",
+        "end_date": "2025-12-31",
         "daily": ["temperature_2m_mean", "precipitation_sum"],
         "timezone": "America/Sao_Paulo",
     }

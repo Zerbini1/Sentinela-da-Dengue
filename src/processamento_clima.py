@@ -6,6 +6,10 @@ df_diario = pd.read_parquet("data/bronze/clima_estado")
 # Garantindo que é data
 df_diario['date'] = pd.to_datetime(df_diario['date'])
 
+# Removendo Timezone (UTC) para compatibilidade com dados de Dengue
+if df_diario['date'].dt.tz is not None:
+    df_diario['date'] = df_diario['date'].dt.tz_localize(None)
+
 # 2. Transformando em Semanal por Município (Silver)
 # Agrupamos por Município E Data (semana)
 df_semanal_municipios = df_diario.set_index('date').groupby('municipio_id').resample('W-SUN').agg({
