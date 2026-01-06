@@ -1,0 +1,116 @@
+# Sentinela da Dengue
+
+> [Ler em Português](README.md)
+
+## Project Overview
+
+This project implements an End-to-End Data Engineering pipeline to analyze the correlation between Climate conditions (Temperature/Precipitation) and Dengue cases in the state of Espírito Santo, Brazil.
+
+The primary objective is to demonstrate a robust ETL process using the **Medallion Architecture** (Bronze, Silver, Gold), ensuring data integrity, historical preservation, and analytical readiness. The pipeline processes data for 78 municipalities over a period of 6 years (2020-2025).
+
+## Context: The Dengue Problem
+
+Dengue is a viral infection transmitted to humans through the bite of infected mosquitoes (*Aedes aegypti*). It is a critical public health challenge in tropical regions like Brazil.
+
+The disease dynamics are closely linked to environmental limits:
+*   **Precipitation:** Stagnant water from rainfall creates breeding grounds for mosquito larvae.
+*   **Temperature:** Warmer climates accelerate the mosquito's life cycle and viral replication rates.
+
+This project aims to engineer data pipelines that allow epidemiologists to maximize their predictive capabilities regarding these environmental triggers.
+
+## Architecture
+
+The project is structured following the Medallion Architecture pattern:
+
+### 1. Bronze Layer (Raw Data)
+*   **Source:** Ingestion from external APIs (**OpenMeteo** for Climate and **InfoDengue** for epidemiological data).
+*   **Storage:** Data is stored in Apache Parquet format.
+*   **Partitioning:** Climate data is physically partitioned by `municipio_id` (Hive Partitioning) to optimize localized queries.
+
+### 2. Silver Layer (Cleaned & Standardized)
+*   **Transformation:** 
+    *   Standardization of data types (Float/Int).
+    *   **Timezone Normalization:** Removal of UTC offsets to ensure compatibility between disparate sources.
+    *   **Aggregation:** Conversion of daily climatic records into Weekly Epidemiological Summaries (Mean Temperature, Total Precipitation).
+*   **Output:** `clima_municipios.parquet`, `clima_estado.parquet`, `dengue_municipios.parquet`.
+
+### 3. Gold Layer (Analytical)
+*   **Integration:** Joins performed between Climate and Epidemiology datasets.
+*   **Views:**
+    *   **Macro View:** State-level aggregated trends.
+    *   **Micro View:** Municipality-level analytical tables.
+*   **Schema:** Renamed columns for business clarity (e.g., `temp_media_semana`, `casos_confirmados`).
+
+## Technologies Used
+
+*   **Language:** Python 3.10+
+*   **Data Processing:** Pandas, NumPy
+*   **Storage Format:** Apache Parquet
+*   **APIs:** Open-Meteo, InfoDengue
+*   **Visualization:** Matplotlib, Seaborn
+
+## Repository Structure
+
+```text
+├── data/                   # Data Lake Storage (Ignored by Git)
+│   ├── bronze/             # Raw ingestion data
+│   ├── silver/             # Processed and cleaned data
+│   └── gold/               # Final analytical tables
+├── results/
+│   └── graficos/           # Generated visualizations/charts
+├── src/                    # Source Code
+│   ├── ingestao_*.py       # Extraction scripts
+│   ├── processamento_*.py  # Transformation scripts (Bronze -> Silver)
+│   ├── etl_gold.py         # Integration scripts (Silver -> Gold)
+│   └── visualizacao_*.py   # Data Viz scripts
+└── requirements.txt        # Project dependencies
+```
+
+## How to Run
+
+Follow these steps to reproduce the pipeline environment and execution:
+
+### 1. Environment Setup
+```bash
+# Create virtual environment
+python -m venv .venv
+
+# Activate environment (Linux/Mac)
+source .venv/bin/activate
+
+# Install dependencies
+pip install pandas pyarrow requests matplotlib seaborn openmeteo-requests requests-cache retry_requests
+```
+
+### 2. Pipeline Execution
+Run the scripts in the logical data flow order.
+
+**Step 1: Bronze Layer (Ingestion)**
+```bash
+python src/ingestao_clima_ES.py
+python src/ingestao_dengue_ES.py
+```
+
+**Step 2: Silver Layer (Processing)**
+```bash
+python src/processamento_clima.py
+python src/processamento_dengue.py
+```
+
+**Step 3: Gold Layer (ETL)**
+```bash
+python src/etl_gold.py
+```
+
+**Step 4: Analysis & Visualization**
+```bash
+python src/visualizacao_analitica.py
+```
+
+## Results
+
+After execution, the analytical charts will be available in the `results/graficos` directory, providing visual insights into the correlation between rainfall peaks and dengue outbreaks.
+
+## Author
+
+Developed by **Felipe Zerbini**.

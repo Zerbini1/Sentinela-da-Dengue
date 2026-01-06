@@ -1,4 +1,6 @@
-# Sentinela da Dengue - Pipeline de Engenharia de Dados
+# Sentinela da Dengue
+
+> [Read in English](README_en.md)
 
 ## Visão Geral do Projeto
 
