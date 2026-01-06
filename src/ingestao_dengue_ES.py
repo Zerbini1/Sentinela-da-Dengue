@@ -9,9 +9,7 @@ url = "https://servicodados.ibge.gov.br/api/v1/localidades/estados/32/municipios
 response = requests.get(url)
 dados = response.json()
 
-cidades = []
 for cidade in dados:
-    cidades.append({'nome': cidade['nome'], 'id': cidade['id']})
     url = f"https://info.dengue.mat.br/api/alertcity?geocode={cidade['id']}&disease=dengue&format=json&ew_start=01&ey_start=2020&ew_end=49&ey_end=2025"
     response = requests.get(url)
     dados_dengue = response.json()
