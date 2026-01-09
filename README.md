@@ -99,7 +99,14 @@ python src/visualizacao_analitica.py
 
 ## Resultados
 
-Após a execução, os gráficos analíticos estarão disponíveis no diretório `results/graficos`, fornecendo insights visuais sobre a correlação entre picos de chuva e surtos de dengue.
+O pipeline processa os dados brutos e gera visualizações analíticas que comprovam a correlação entre as variáveis climáticas e epidemiológicas.
+
+Abaixo, o gráfico final gerado pelo projeto demonstra visualmente o "lag" (atraso) entre os picos de precipitação e a explosão de casos de dengue:
+
+![Correlação Chuva vs Dengue](results/graficos/2_chuva_vs_dengue_combinado.png)
+*(Figura 1: Barras azuis representam o volume de chuva (mm) e a linha vermelha indica os casos de dengue. Nota-se claramente o padrão sazonal após períodos chuvosos.)*
+
+Os gráficos em alta resolução são salvos automaticamente no diretório `results/graficos` após a execução do script de visualização.
 
 ## Autor
 
